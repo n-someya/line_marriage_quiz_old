@@ -21,9 +21,9 @@ const app = express();
 app.post('/webhook', line.middleware(config), (req, res) => {
   console.log("test-req");
   console.log(req.body);
-  //Promise
-  //  .all(req.body.events.map(handleEvent))
-  //  .then((result) => res.json(result));
+  Promise
+    .all(req.body.events.map(handleEvent))
+    .then((result) => res.json(result));
 });
 
 // event handler
