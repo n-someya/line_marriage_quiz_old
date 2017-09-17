@@ -2,12 +2,16 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const NCMB = require('ncmb');
 
 // create LINE SDK config from env variables
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET,
 };
+
+const ncmb = new NCMB(process.env.NCMB_APPLICATION_KEY, process.env.NCMB_CLIENT_KEY);
+const TestClass = ncmb.DataStore("TestClass");
 
 // create LINE SDK client
 const client = new line.Client(config);
@@ -19,8 +23,6 @@ const app = express();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/webhook', line.middleware(config), (req, res) => {
-  console.log("test-req");
-  console.log(req.body);
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result));
@@ -39,6 +41,16 @@ function handleEvent(event) {
   console.log("userid=")
   console.log(event.source.userId)
 
+  var testClass = new TestClass();
+  testClass.set("userid", event.source.userId);
+  testClass.set("answer", event.message.text);
+  testClass.save()
+           .then(function(){
+              // 保存に成功した場合の処理
+            })
+           .catch(function(err){
+              // 保存に失敗した場合の処理
+            });
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
