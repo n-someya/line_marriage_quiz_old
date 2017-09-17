@@ -33,8 +33,9 @@ function handleEvent(event) {
     return Promise.resolve(null);
   }
 
+  const text = event.message.text + "イカ？";
   // create a echoing text message
-  const echo = { type: 'text', text: event.message.text };
+  const echo = { type: 'text', text: text };
   console.log("userid=")
   console.log(event.source.userId)
 
