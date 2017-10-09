@@ -21,8 +21,16 @@ const app = express();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/webhook', line.middleware(config), (req, res) => {
-  console.log("test-req");
   console.log(req.body);
+  // 
+  //   .then(res => {
+  //     pg_client.query('select * from answers;')
+  //       .then(res => {
+  //         console.log("DB connect ok: ", res);
+  //       }).catch(e => {
+  //         console.log("DB connect ng: ", e.stack);
+  //       });
+  //   });
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result));
@@ -34,10 +42,21 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  if ( event.message.text === "ref" ) {
-    const res = await pg_client.query('select * from answer;')
-    const pgquery = { type: 'text', text: res };
-    return client.replyMessage(event.replyToken, pgquery);
+  if (event.message.text === "ref") {
+    console.log("ref: comming !!!!!!");
+    return pg_client.connect()
+      .then(res => {
+        pg_client.query('select * from answers;')
+          .then(res => {
+            const pgquery = { type: 'text', text: JSON.stringify(res) };
+            console.log("DB connect ok: ", res);
+            return client.replyMessage(event.replyToken, pgquery);
+          }).catch(e => {
+            const pgquery = { type: 'text', text: e.stack };
+            console.log("DB connect ng: ", e.stack);
+            return client.replyMessage(event.replyToken, pgquery);
+          })
+      });
   }
   const text = event.message.text + "イカ？";
   // create a echoing text message
