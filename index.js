@@ -2,6 +2,8 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const { Client } = require('pg');
+const pg_client = new Client();
 
 // create LINE SDK config from env variables
 const config = {
@@ -32,7 +34,11 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-
+  if ( event.message.text === "ref" ) {
+    const res = await pg_client.query('select * from answer;')
+    const pgquery = { type: 'text', text: res };
+    return client.replyMessage(event.replyToken, pgquery);
+  }
   const text = event.message.text + "イカ？";
   // create a echoing text message
   const echo = { type: 'text', text: text };
