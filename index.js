@@ -3,7 +3,6 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
 const { Client } = require('pg');
-const pg_client = new Client();
 
 // create LINE SDK config from env variables
 const config = {
@@ -38,6 +37,7 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 // event handler
 function handleEvent(event) {
+  const pg_client = new Client();
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null);
