@@ -57,6 +57,19 @@ function handleEvent(event) {
             return client.replyMessage(event.replyToken, pgquery);
           })
       });
+  }else{
+    return pg_client.connect()
+    .then(res =>{
+      //現在の設問番号を取得
+      pg_client.query('select coalesce((select max(stage)  from corrects), 0) + 1;')
+      .then(res => {
+        const pgquery = {
+          type: 'text',
+          text: "現在の問題番号は " + res + " です。" 
+        };
+        return client.replyMessage(event.replyToken, pgquery);
+      })
+    })
   }
   const text = event.message.text + "イカ？";
   // create a echoing text message
