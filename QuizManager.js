@@ -11,7 +11,7 @@ class QuizManager {
         return this.client.connect()
             .then(res => {
                 //現在の設問番号を取得
-                return this.client.query('select coalesce((select max(stage)  from corrects), 0) + 1 as current_stage;')
+                return this.client.query('select coalesce((select max(stage)  from corrects), 0) as current_stage;')
             }).then(res => {
                 return Promise.resolve({
                     type: 'text',
