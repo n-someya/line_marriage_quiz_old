@@ -8,7 +8,7 @@ class QuizManager {
     }
 
     get_current_stage() {
-        return pg_client.connect()
+        return this.client.connect()
             .then(res => {
                 //現在の設問番号を取得
                 return this.client.query('select coalesce((select max(stage)  from corrects), 0) + 1;')
