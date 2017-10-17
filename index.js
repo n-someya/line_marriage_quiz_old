@@ -31,7 +31,7 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  const quiz_manager = QuizManager();
+  const quiz_manager = new QuizManager();
   if (event.message.text === "ref") {
     // return pg_client.connect()
     //   .then(res => {
