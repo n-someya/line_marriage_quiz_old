@@ -11,11 +11,11 @@ class QuizManager {
         return this.client.connect()
             .then(res => {
                 //現在の設問番号を取得
-                return this.client.query('select coalesce((select max(stage)  from corrects), 0) + 1;')
-            }).then(row => {
+                return this.client.query('select coalesce((select max(stage)  from corrects), 0) + 1 as current_stage;')
+            }).then(res => {
                 return Promise.resolve({
                     type: 'text',
-                    text: "現在の問題番号は " + JSON.stringify(row) + " です。"
+                    text: "現在の問題番号は " + res.rows[0].current_stage + " です。"
                 });
             })
     }
