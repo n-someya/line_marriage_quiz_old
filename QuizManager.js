@@ -11,7 +11,7 @@ class QuizManager {
         return pg_client.connect()
             .then(res => {
                 //現在の設問番号を取得
-                return pg_client.query('select coalesce((select max(stage)  from corrects), 0) + 1;')
+                return this.client.query('select coalesce((select max(stage)  from corrects), 0) + 1;')
             }).then(row => {
                 return Promise.resolve({
                     type: 'text',
