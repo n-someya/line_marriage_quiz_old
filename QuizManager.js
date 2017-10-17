@@ -15,7 +15,7 @@ class QuizManager {
             }).then(row => {
                 return Promise.resolve({
                     type: 'text',
-                    text: "現在の問題番号は " + row[0] + " です。"
+                    text: "現在の問題番号は " + JSON.stringify(row) + " です。"
                 });
             })
     }
